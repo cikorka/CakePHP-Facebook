@@ -205,15 +205,4 @@ class FacebookUser extends FacebookAppModel {
 		),
 	);
 
-/**
- * Return current logged in user data
- * Its important that `$this->recursive = 0;` because associations with foreignKey value `me()` is not work!
- *
- * @return array user data fetched from Facebook
- */
-	public function getLoginData() {
-		$this->contain();
-		return $this->find('first', array('conditions' => array('FacebookUser.uid = me()' => null)));
-	}
-
 }
