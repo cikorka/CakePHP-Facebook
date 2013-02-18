@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="CakePHP Ultimate Facebook Plugin : Contains FacebookComponent, FacebookHelper, FacebookAuthenticate class, Facebook FQL Datasource and many model classes for CakePHP 2.x" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>CakePHP Ultimate Facebook Plugin</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/cikorka/CakePHP-Ultimate-Facebook-Plugin">View on GitHub</a>
+
+          <h1 id="project_title">CakePHP Ultimate Facebook Plugin</h1>
+          <h2 id="project_tagline">Contains FacebookComponent, FacebookHelper, FacebookAuthenticate class, Facebook FQL Datasource and many model classes for CakePHP 2.x</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/cikorka/CakePHP-Ultimate-Facebook-Plugin/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/cikorka/CakePHP-Ultimate-Facebook-Plugin/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>CakePHP Ultimate Facebook Plugin</h1>
+
+<p>Contains FacebookComponent, FacebookHelper, FacebookAuthenticate class, Facebook FQL Datasource and many model classes for CakePHP 2.x</p>
+
+<h2>Install and Setup</h2>
+
+<ul>
+<li>
+<p>First download &amp; unzip or clone the repository into your <code>app/Plugin/Facebook</code> directory</p>
+
+<pre><code>git clone https://github.com/cikorka/CakePHP-Ultimate-Facebook-Plugin.git app/Plugin/Facebook
+</code></pre>
+</li>
+<li>
+<p>Load the plugin in your <code>app/Config/bootstrap.php</code> file:</p>
+
+<pre><code>//app/Config/bootstrap.php
+CakePlugin::load('Facebook');
+</code></pre>
+</li>
+<li>
+<p>Add component in <code>app/Controller/AppController.php</code> file:</p>
+
+<pre><code>//app/Controller/AppController.php
+public $components = array('Facebook.Facebook');
+</code></pre>
+</li>
+<li>
+<p>Add configuration below to <code>app/Config/database.php</code> file:</p>
+
+<pre><code>//app/Config/database.php
+public $facebook = array(
+    'datasource' =&gt; 'Facebook.FQL',
+    'app_id' =&gt; '4236257110xxxxx',
+    'app_secret' =&gt; '0855cfd6592xxxxxxxxxxxxxxx'
+);
+</code></pre>
+</li>
+</ul><h2>Using</h2>
+
+<p>Helper and Autentificate class are loaded automaticly.</p>
+
+<pre><code>// In the View. See FacebookHelper for avaible options
+$options = array('perms' =&gt; array('email', 'publish_stream', 'etc...'));
+echo $this-&gt;Facebook-&gt;login('Login', $options);
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">CakePHP Ultimate Facebook Plugin maintained by <a href="https://github.com/cikorka">cikorka</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
