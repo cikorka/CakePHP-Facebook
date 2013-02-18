@@ -21,7 +21,7 @@
 
 App::uses('AppHelper', 'View/Helper');
 App::uses('CakeSession', 'Model/Datasource');
- 
+
 
 class FacebookHelper extends AppHelper {
 
@@ -68,11 +68,11 @@ class FacebookHelper extends AppHelper {
 		}
 
 		$this->meta();
-		
+
 		if ($this->settings['css'] === true) {
-			$this->Html->css('Facebook.zocial/zocial', array('inline' => false));			
+			$this->Html->css('Facebook.zocial/zocial', array('inline' => false));
 		}
-		
+
 		$this->Js->buffer($this->_View->element('Facebook.init', $this->settings));
 		$this->_View->output .= $this->Html->tag('div', '', array('id' => 'fb-root'));
 	}
@@ -192,36 +192,36 @@ class FacebookHelper extends AppHelper {
  *
  * ### Attributes
  *
- * - `client_id` - required - Your App ID. This is called client_id instead of app_id for this particular method in order 
+ * - `client_id` - required - Your App ID. This is called client_id instead of app_id for this particular method in order
  *    to be compliant with the OAuth 2.0 specification.
- * - `redirect_uri` - required - The URL to redirect to after the user clicks a button in the dialog. 
- *    The URL you specify must be a URL of with the same Base Domain as specified in your app's settings, 
- *    a Canvas URL of the form https://apps.facebook.com/YOUR_APP_NAMESPACE or a Page Tab URL of the 
+ * - `redirect_uri` - required - The URL to redirect to after the user clicks a button in the dialog.
+ *    The URL you specify must be a URL of with the same Base Domain as specified in your app's settings,
+ *    a Canvas URL of the form https://apps.facebook.com/YOUR_APP_NAMESPACE or a Page Tab URL of the
  *    form https://www.facebook.com/PAGE_USERNAME/app_YOUR_APP_ID
- * - `scope` - A comma separated list of permission names which you would like the user to grant your application. 
+ * - `scope` - A comma separated list of permission names which you would like the user to grant your application.
  *    Only the permissions which the user has not already granted your application will be shown
- * - `state` - A unique string used to maintain application state between the request and callback. 
- *    When Facebook redirects the user back to your redirect_uri, this parameter's value will be included in the response. 
+ * - `state` - A unique string used to maintain application state between the request and callback.
+ *    When Facebook redirects the user back to your redirect_uri, this parameter's value will be included in the response.
  *    You should use this to protect against Cross-Site Request Forgery.
- * - `response_type` - The requested response type, one of code or token. Defaults to code. 
- *    If left unset, or set to code the Dialog's response will include an OAuth code which can be exchanged 
- *    for an access token as per the server-side authentication flow. If set to token, the Dialog's response 
- *    will include an oauth user access token in the fragment of the URL the user is redirected to - as per 
+ * - `response_type` - The requested response type, one of code or token. Defaults to code.
+ *    If left unset, or set to code the Dialog's response will include an OAuth code which can be exchanged
+ *    for an access token as per the server-side authentication flow. If set to token, the Dialog's response
+ *    will include an oauth user access token in the fragment of the URL the user is redirected to - as per
  *    the client-side authentication flow.
- * - `display` - The display mode with which to render the Dialog. 
- *    One of page, popup or touch. Defaults to page when the user is using a desktop browser or the dialog is 
- *    invoked on the www.facebook.com domain. Defaults to touch when the user is using a mobile browser or the dialog 
- *    is invoked on the m.facebook.com domain. In page mode, the OAuth dialog is displayed in the full Facebook chrome. 
- *    In 'popup' mode, the OAuth dialog is displayed in a form suitable for embedding in a popup window. 
+ * - `display` - The display mode with which to render the Dialog.
+ *    One of page, popup or touch. Defaults to page when the user is using a desktop browser or the dialog is
+ *    invoked on the www.facebook.com domain. Defaults to touch when the user is using a mobile browser or the dialog
+ *    is invoked on the m.facebook.com domain. In page mode, the OAuth dialog is displayed in the full Facebook chrome.
+ *    In 'popup' mode, the OAuth dialog is displayed in a form suitable for embedding in a popup window.
  *    This parameter is automatically specified by most Facebook SDK, so may not need to be set explicitly.
- * 
+ *
  * ### Return Values
- * 
+ *
  * If the user authorizes your application, the browser will redirect to the URL you specified in the redirect_uri parameter.
- * 
- * If the response_type was left unset or was set to the value code, if the user authorizes your application, 
+ *
+ * If the response_type was left unset or was set to the value code, if the user authorizes your application,
  * the browser will be redirected to:
- * 
+ *
  * `YOUR_REDIRECT_URI?code=OAUTH_CODE_GENERATED_BY_FACEBOOK&state=YOUR_STATE_VALUE`
  *
  * If the response_type was the value token, if the user authorizes your application, the browser will be redirected to:
@@ -231,7 +231,7 @@ class FacebookHelper extends AppHelper {
  * If the user does not authorize your application, the browser will redirect to:
  *
  * `YOUR_REDIRECT_URI?error_reason=user_denied&error=access_denied&error_description=The+user+denied+your+request.&state=YOUR_STATE_VALUE`
- * 
+ *
  * @link https://developers.facebook.com/docs/reference/login/#permissions
  * @link https://developers.facebook.com/docs/reference/dialogs/oauth/
  * @return string
@@ -245,18 +245,18 @@ class FacebookHelper extends AppHelper {
 		}
 
 		//$options['perms'] = ClassRegistry::init('Facebook.FacebookUser')->permissions();
-		
+
 		if (isset($options['perms']) && is_array($options['perms'])) {
 			$this->settings['perms'] += $options['perms'];
 			unset($options['perms']);
 		}
-					
+
 		$params = array(
 			'redirect_uri' => Router::url(array('plugin' => 'facebook', 'controller' => 'users', 'action' => 'login'), true),
 			'state' => CakeSession::read($state),
 			'scope' => implode(',', $this->settings['perms']),
 		);
-		
+
 		if (isset($options['display']) && $options['display'] == 'popup') {
 			$onclick = "FB.login(function(response){if(response.authResponse){top.location.href = ':redirect_uri';} else {}}, {scope: ':scope'});";
 			$options += array('onclick' => $this->Text->insert($onclick, $params));
@@ -301,7 +301,7 @@ class FacebookHelper extends AppHelper {
 	}
 
 	public function logout($label = null, $options = array()) {
-		if (AuthComponent::user() && $this->Fb->getUser()) {
+		if (AuthComponent::user()) {
 			$url = Router::url(array('plugin' => 'facebook', 'controller' => 'users', 'action' => 'logout'), true);
 			$options += array('onclick' => "FB.logout(function(response) {top.location.href = '$url';});");
 			return $this->Html->link(($label === null) ? __('Logout') : $label, $url, $options);
