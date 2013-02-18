@@ -75,7 +75,7 @@ class FQL extends DboSource {
 		'binary' => array('name' => 'blob'),
 		'boolean' => array('name' => 'tinyint', 'limit' => '1')
 	);
-	
+
 /**
  * Used for memory caching queries
  *
@@ -112,7 +112,7 @@ class FQL extends DboSource {
 		if ($cache) {
 			return $cache;
 		}
-		
+
 		$pluginName = basename(dirname(dirname(dirname(__FILE__))));
 		$Folder = new Folder(App::pluginPath($pluginName) . 'Config' . DS . 'Schema' . DS);
 		$schema = $Folder->find('.*\.php');
@@ -124,7 +124,7 @@ class FQL extends DboSource {
 		}
 
 		unset($data, $cache, $Folder, $schema, $table, $ext);
-		
+
 		parent::listSources($tables);
 		return $tables;
 	}
@@ -141,11 +141,11 @@ class FQL extends DboSource {
 		} else {
 			$table = $model->useTable;
 		}
-		
+
 		if (isset($this->_descriptions[$table])) {
 			return $this->_descriptions[$table];
 		}
-		
+
 		$pluginName = basename(dirname(dirname(dirname(__FILE__))));
 		$file = App::pluginPath($pluginName) . 'Config' . DS . 'Schema' . DS . $table . '.php';
 		if (file_exists($file)) {
@@ -203,10 +203,6 @@ class FQL extends DboSource {
 		}
 
 		switch ($column) {
-			case 'binary':
-				return $this->_connection->quote($data, PDO::PARAM_LOB);
-			case 'boolean':
-				return $this->_connection->quote($this->boolean($data, true), PDO::PARAM_BOOL);
 			case 'string':
 			case 'text':
 				return sprintf("'%s'", $data);
@@ -238,8 +234,8 @@ class FQL extends DboSource {
  */
 	protected function _execute($fql, $params = array(), $prepareOptions = array()) {
 		$params += array('format' => 'json-strings', 'access_token' => CakeSession::read('access_token'));
-		//debug($fql);
 		$cacheName = md5(serialize($params) . $fql);
+
 		if (!isset($this->_cache[$cacheName])) {
 			$this->_cache[$cacheName] = false;
 			$results = json_decode($this->_connection->get(sprintf('https://graph.facebook.com/fql?q={%s}', $fql), $params)->body, true);
@@ -250,7 +246,6 @@ class FQL extends DboSource {
 
 		if (isset($results['error'])) {
 			CakeLog::error($results['error']['message']);
-			//debug($results['error']);
 		}
 		$this->_restults = $this->_cache[$cacheName];
 		unset($fql, $params, $prepareOptions, $cacheName, $results);
@@ -317,7 +312,7 @@ class FQL extends DboSource {
 			if (!is_bool($result) && $cache) {
 				$this->_writeQueryCache($fql, $out, $params);
 			}
-			
+
 			unset($fql, $params, $options, $cache, $cached, $result, $assocAlias, $modelAlias, $row, $assocRow);
 
 			if (empty($out) && is_bool($this->_result)) {
@@ -343,195 +338,6 @@ class FQL extends DboSource {
 	}
 
 /**
- * A more efficient way to fetch associations.	Woohoo!
- *
- * @param Model $model Primary model object
- * @param string $query Association query
- * @param array $ids Array of IDs of associated records
- * @return array Association results
- */
-	public function ___OLDfetchAssociated2(Model $model, $query, $ids) {
-		$query = str_replace('{$__cakeID__$}', implode(', ', $ids), $query);
-		if (count($ids) > 1) {
-			$query = str_replace('=+(', 'IN+(', $query);
-		}
-		//debug($query);
-		return $this->fetchAll($query, $model->cacheQueries);
-	}
-
-/**
- * Queries associations.  Used to fetch results on recursive models.
- *
- * @param Model $model Primary Model object
- * @param Model $linkModel Linked model that
- * @param string $type Association type, one of the model association types ie. hasMany
- * @param string $association
- * @param array $assocData
- * @param array $queryData
- * @param boolean $external Whether or not the association query is on an external datasource.
- * @param array $resultSet Existing results
- * @param integer $recursive Number of levels of association
- * @param array $stack
- * @return mixed
- * @throws CakeException when results cannot be created.
- */
-	public function ___OLDqueryAssociation2(Model $model, &$linkModel, $type, $association, $assocData, &$queryData, $external, &$resultSet, $recursive, $stack) {
-		if (isset($stack['_joined'])) {
-			$joined = $stack['_joined'];
-			unset($stack['_joined']);
-		}
-
-		if ($query = $this->generateAssociationQuery($model, $linkModel, $type, $association, $assocData, $queryData, $external, $resultSet)) {
-			if (!is_array($resultSet)) {
-				throw new CakeException(__d('cake_dev', 'Error in Model %s', get_class($model)));
-			}
-			if ($type === 'hasMany' && empty($assocData['limit']) && !empty($assocData['foreignKey'])) {
-				$ins = $fetch = array();
-				foreach ($resultSet as &$result) {
-					if ($in = $this->insertQueryData('{$__cakeID__$}', $result, $association, $assocData, $model, $linkModel, $stack)) {
-						$ins[] = $in;
-					}
-				}
-
-				if (!empty($ins)) {
-					$ins = array_unique($ins);
-					foreach ($ins as $in) {
-						$fetch[] = $this->fetchAssociated($model, $query, array($in));
-					}
-				}
-//if ($linkModel->alias == 'FacebookPhoto') debug($result);
-				// @todo run callbacks on recursive associated models
-				foreach ($fetch as $_fetch) {
-					if (!empty($_fetch) && is_array($_fetch)) {
-						if ($recursive > 0) {
-							foreach ($linkModel->associations() as $type1) {
-								foreach ($linkModel->{$type1} as $assoc1 => $assocData1) {
-									$deepModel = $linkModel->{$assoc1};
-									$tmpStack = $stack;
-									$tmpStack[] = $assoc1;
-									if ($linkModel->useDbConfig === $deepModel->useDbConfig) {
-										$db = $this;
-									} else {
-										$db = ConnectionManager::getDataSource($deepModel->useDbConfig);
-									}
-									debug($assoc1);
-									$db->queryAssociation($linkModel, $deepModel, $type1, $assoc1, $assocData1, $queryData, true, $_fetch, $recursive - 1, $tmpStack);
-								}
-							}
-						}
-					}
-				}
-
-				//
-				if ($queryData['callbacks'] === true || $queryData['callbacks'] === 'after') {
-					$this->_filterResults($fetch, $model);
-				}
-
-				foreach ($fetch as $_fetch) {
-					$this->_mergeHasMany($resultSet, $_fetch, $association, $model, $linkModel);
-				}
-				// originaly is return $this->_mergeHasMany($resultSet, $fetch, $association, $model, $linkModel);
-				return true;
-			} elseif ($type === 'hasAndBelongsToMany') {
-				$ins = $fetch = array();
-				foreach ($resultSet as &$result) {
-					if ($in = $this->insertQueryData('{$__cakeID__$}', $result, $association, $assocData, $model, $linkModel, $stack)) {
-						$ins[] = $in;
-					}
-				}
-				if (!empty($ins)) {
-					$ins = array_unique($ins);
-					if (count($ins) > 1) {
-						$query = str_replace('{$__cakeID__$}', '(' . implode(', ', $ins) . ')', $query);
-						$query = str_replace('= (', 'IN (', $query);
-					} else {
-						$query = str_replace('{$__cakeID__$}', $ins[0], $query);
-					}
-					$query = str_replace(' WHERE 1 = 1', '', $query);
-				}
-
-				$foreignKey = $model->hasAndBelongsToMany[$association]['foreignKey'];
-				$joinKeys = array($foreignKey, $model->hasAndBelongsToMany[$association]['associationForeignKey']);
-				list($with, $habtmFields) = $model->joinModel($model->hasAndBelongsToMany[$association]['with'], $joinKeys);
-				$habtmFieldsCount = count($habtmFields);
-				$q = $this->insertQueryData($query, null, $association, $assocData, $model, $linkModel, $stack);
-
-				if ($q !== false) {
-					$fetch = $this->fetchAll($q, $model->cacheQueries);
-				} else {
-					$fetch = null;
-				}
-			}
-
-			$modelAlias = $model->alias;
-			$modelPK = $model->primaryKey;
-			foreach ($resultSet as &$row) {
-				if ($type !== 'hasAndBelongsToMany') {
-					$q = $this->insertQueryData($query, $row, $association, $assocData, $model, $linkModel, $stack);
-					$fetch = null;
-					if ($q !== false) {
-						$joinedData = array();
-						if (($type === 'belongsTo' || $type === 'hasOne') && isset($row[$linkModel->alias], $joined[$model->alias]) && in_array($linkModel->alias, $joined[$model->alias])) {
-							$joinedData = Hash::filter($row[$linkModel->alias]);
-							if (!empty($joinedData)) {
-								$fetch[0] = array($linkModel->alias => $row[$linkModel->alias]);
-							}
-						} else {
-							$fetch = $this->fetchAll($q, $model->cacheQueries);
-						}
-					}
-				}
-				$selfJoin = $linkModel->name === $model->name;
-
-				if (!empty($fetch) && is_array($fetch)) {
-					if ($recursive > 0) {
-						foreach ($linkModel->associations() as $type1) {
-							foreach ($linkModel->{$type1} as $assoc1 => $assocData1) {
-								$deepModel = $linkModel->{$assoc1};
-
-								if ($type1 === 'belongsTo' || ($deepModel->alias === $modelAlias && $type === 'belongsTo') || ($deepModel->alias !== $modelAlias)) {
-									$tmpStack = $stack;
-									$tmpStack[] = $assoc1;
-									if ($linkModel->useDbConfig == $deepModel->useDbConfig) {
-										$db = $this;
-									} else {
-										$db = ConnectionManager::getDataSource($deepModel->useDbConfig);
-									}
-									$db->queryAssociation($linkModel, $deepModel, $type1, $assoc1, $assocData1, $queryData, true, $fetch, $recursive - 1, $tmpStack);
-								}
-							}
-						}
-					}
-					if ($type === 'hasAndBelongsToMany') {
-						$merge = array();
-						foreach ($fetch as $data) {
-							if (isset($data[$with]) && $data[$with][$foreignKey] === $row[$modelAlias][$modelPK]) {
-								if ($habtmFieldsCount <= 2) {
-									unset($data[$with]);
-								}
-								$merge[] = $data;
-							}
-						}
-						if (empty($merge) && !isset($row[$association])) {
-							$row[$association] = $merge;
-						} else {
-							$this->_mergeAssociation($row, $merge, $association, $type);
-						}
-					} else {
-						$this->_mergeAssociation($row, $fetch, $association, $type, $selfJoin);
-					}
-					if (isset($row[$association])) {
-						$row[$association] = $linkModel->afterFind($row[$association], false);
-					}
-				} else {
-					$tempArray[0][$association] = false;
-					$this->_mergeAssociation($row, $tempArray, $association, $type, $selfJoin);
-				}
-			}
-		}
-	}
-
-/**
  * Returns a quoted name of $data for use in an FQL statement.
  * Strips fields out of FQL functions before quoting.
  *
@@ -549,19 +355,6 @@ class FQL extends DboSource {
 			list(, $data) = explode('.', $data);
 		}
 		return $data;
-	}
-
-/**
- * Extracts a Model.field identifier and an SQL condition operator from a string, formats
- * and inserts values, and composes them into an SQL snippet.
- *
- * @param Model $model Model object initiating the query
- * @param string $key An SQL key snippet containing a field and optional SQL operator
- * @param mixed $value The value(s) to be inserted in the string
- * @return string
- */
-	protected function ___OLD_parseKey2($model, $key, $value) {
-		return str_replace(' ', null, parent::_parseKey($model, $key, $value));
 	}
 
 /**
@@ -667,7 +460,6 @@ class FQL extends DboSource {
 						'alias' => $association,
 						'fields' => $this->fields($linkModel, $association, $assocData['fields']),
 						'type' => isset($assocData['type']) ? $assocData['type'] : 'LEFT',
-						//'conditions' => trim($this->conditions($conditions, true, false, $model))
 						'conditions' => $this->_mergeConditions($this->getConstraint('belongsTo', $model, $linkModel, $association, $assocData), $assocData['conditions'])
 
 					);
@@ -723,7 +515,6 @@ class FQL extends DboSource {
 					'limit' => $assocData['limit'],
 					'table' => $this->fullTableName($linkModel),
 					'alias' => $association,
-					//'fields' => array_merge($this->fields($linkModel, $association, $assocData['fields']), $joinFields),
 					'fields' => $this->fields($linkModel, $association, $assocData['fields']),
 					'order' => $assocData['order'],
 					'group' => null,
@@ -782,109 +573,6 @@ class FQL extends DboSource {
 	}
 
 /**
- * Creates a WHERE clause by parsing given conditions array.  Used by DboSource::conditions().
- *
- * @param array $conditions Array or string of conditions
- * @param boolean $quoteValues If true, values should be quoted
- * @param Model $model A reference to the Model instance making the query
- * @return string FQL fragment
- */
-	public function ___OLDconditionKeysToString($conditions, $quoteValues = true, $model = null) {
-		$out = array();
-		$data = $columnType = null;
-		$bool = array('and', 'or', 'not', 'and not', 'or not', 'xor', '||', '&&');
-
-		foreach ($conditions as $key => $value) {
-			$join = ' AND ';
-			$not = null;
-
-			if (is_array($value)) {
-				$valueInsert = (
-					!empty($value) &&
-					(substr_count($key, '?') === count($value) || substr_count($key, ':') === count($value))
-				);
-			}
-
-			if (is_numeric($key) && empty($value)) {
-				continue;
-			} elseif (is_numeric($key) && is_string($value)) {
-				$out[] = $not . $this->_quoteFields($value);
-			} elseif ((is_numeric($key) && is_array($value)) || in_array(strtolower(trim($key)), $bool)) {
-				if (in_array(strtolower(trim($key)), $bool)) {
-					$join = ' ' . strtoupper($key) . ' ';
-				} else {
-					$key = $join;
-				}
-				$value = $this->conditionKeysToString($value, $quoteValues, $model);
-
-				if (strpos($join, 'NOT') !== false) {
-					if (strtoupper(trim($key)) === 'NOT') {
-						$key = 'AND ' . trim($key);
-					}
-					$not = 'NOT ';
-				}
-
-				if (empty($value[1])) {
-					if ($not) {
-						$out[] = $not . '(' . $value[0] . ')';
-					} else {
-						$out[] = $value[0];
-					}
-				} else {
-					$out[] = '(' . $not . '(' . implode(') ' . strtoupper($key) . ' (', $value) . '))';
-				}
-			} else {
-				if (is_object($value) && isset($value->type)) {
-					if ($value->type === 'identifier') {
-						$data .= $this->name($key) . ' = ' . $this->name($value->value);
-					} elseif ($value->type === 'expression') {
-						if (is_numeric($key)) {
-							$data .= $value->value;
-						} else {
-							$data .= $this->name($key) . ' = ' . $value->value;
-						}
-					}
-				} elseif (is_array($value) && !empty($value) && !$valueInsert) {
-					$keys = array_keys($value);
-					if ($keys === array_values($keys)) {
-						$count = count($value);
-						if ($count === 1 && !preg_match("/\s+NOT$/", $key)) {
-							$data = $this->_quoteFields($key) . ' = (';
-						} else {
-							$data = $this->_quoteFields($key) . ' IN (';
-						}
-						if ($quoteValues) {
-							if (is_object($model)) {
-								$columnType = $model->getColumnType($key);
-							}
-							// ++ trim
-							$data .= trim(implode(',', $this->value($value, $columnType)), ',');
-						}
-						$data .= ')';
-					} else {
-						$ret = $this->conditionKeysToString($value, $quoteValues, $model);
-						if (count($ret) > 1) {
-							$data = '(' . implode(') AND (', $ret) . ')';
-						} elseif (isset($ret[0])) {
-							$data = $ret[0];
-						}
-					}
-				} elseif (is_numeric($key) && !empty($value)) {
-					$data = $this->_quoteFields($value);
-				} else {
-					$data = $this->_parseKey($model, trim($key), $value);
-				}
-
-				if ($data) {
-					$out[] = $data;
-					$data = null;
-				}
-			}
-		}
-		return $out;
-	}
-
-/**
  * Builds and generates an FQL statement from an array. Handles final clean-up before conversion.
  *
  * @param array $query An array defining an FQL query
@@ -897,7 +585,6 @@ class FQL extends DboSource {
 			$count = count($query['joins']);
 			for ($i = 0; $i < $count; $i++) {
 				if (is_array($query['joins'][$i])) {
-					//$query['joins'][$i] = $this->buildJoinStatement($query['joins'][$i]);
 					$join = $query['joins'][$i];
 					$join['table'] = $query['joins'][$i]['table']->useTable;
 					$query['joins'][$i] = $this->buildStatement($join, $query['joins'][$i]['table']);
@@ -929,8 +616,8 @@ class FQL extends DboSource {
 			case 'select':
 				$conditions = trim($conditions);
 				$fields = str_replace(' ', null, $fields);
-				$fql = "SELECT {$fields} FROM {$table} {$conditions}{$limit}"; //{$group} {$order}
-				$fql = sprintf('"%s":"%s"', $alias, $fql); //str_replace(' ', '+', trim($fql))
+				$fql = "SELECT {$fields} FROM {$table} {$conditions}{$limit}";
+				$fql = sprintf('"%s":"%s"', $alias, $fql);
 				if (!empty($joins)) {
 					$fql .= ',' . $joins;
 				}
