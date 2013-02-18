@@ -39,6 +39,7 @@ class FacebookHelper extends AppHelper {
 	public $settings = array(
 		'html5' => true,
 		'perms' => array(),
+		'css' => true,
 	);
 
 /**
@@ -67,6 +68,10 @@ class FacebookHelper extends AppHelper {
 		}
 
 		$this->meta();
+		
+		if ($this->settings['css'] === true) {
+			$this->Html->css('Facebook.zocial/zocial', array('inline' => false));			
+		}
 		
 		$this->Js->buffer($this->_View->element('Facebook.init', $this->settings));
 		$this->_View->output .= $this->Html->tag('div', '', array('id' => 'fb-root'));
