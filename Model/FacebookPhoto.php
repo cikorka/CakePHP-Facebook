@@ -21,6 +21,36 @@
 
 App::uses('FacebookAppModel', 'Facebook.Model');
 
+/**
+ * # Photo
+ *
+ * ## Permissions
+ *
+ * To read the photo table you need
+ *
+ * - any valid access_token if it is public and owned by the Page.
+ * - `user_photos` permissions to access photos and albums uploaded by the user, and photos in which the user has been tagged.
+ * - `friends_photos` permissions to access friends' photos and photos in which the user's friends have been tagged.
+ *
+ * ## Supported Base Where Clauses
+ *
+ * - SELECT ... FROM photo WHERE pid = A
+ * - SELECT ... FROM photo WHERE aid = A
+ * - SELECT ... FROM photo WHERE aid = A AND pid = B
+ * - SELECT ... FROM photo WHERE album_object_id = A
+ * - SELECT ... FROM photo WHERE object_id = A
+ * - SELECT ... FROM photo WHERE owner = A
+ *
+ * Note: Additional filters on other columns can be specified but they may make the query less efficient.
+ *
+ * ### Notes
+ *
+ * Both object_id and pid uniquely identify a photo, and object_id is the preferred column to use.
+ *
+ * @var array
+ * @link https://developers.facebook.com/docs/reference/fql/user
+ */
+
 class FacebookPhoto extends FacebookAppModel {
 
 /**

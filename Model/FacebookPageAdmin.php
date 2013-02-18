@@ -21,6 +21,26 @@
 
 App::uses('FacebookAppModel', 'Facebook.Model');
 
+/**
+ * # Page Admin
+ *
+ * ## Permissions
+ *
+ * To read the page_admin table you need
+ *
+ * - `manage_pages` [permissions][1] for the list of pages the current session user is an admin of.
+ *
+ * ## Supported Base Where Clauses
+ *
+ * - SELECT ... FROM page_admin WHERE uid = A
+ * - SELECT ... FROM page_admin WHERE page_id = A
+ *
+ * Note: Additional filters on other columns can be specified but they may make the query less efficient.
+ *
+ * @var array
+ * @link https://developers.facebook.com/docs/reference/fql/page
+ */
+
 class FacebookPageAdmin extends FacebookAppModel {
 
 /**

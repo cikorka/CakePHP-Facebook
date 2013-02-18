@@ -21,6 +21,29 @@
 
 App::uses('FacebookAppModel', 'Facebook.Model');
  
+/**
+ * # Page
+ *
+ * ## Permissions
+ *
+ * To read the page table you need
+ *
+ * - no access_token to get public information, or information about public pages that are not demographically restricted.
+ * - any valid access_token to get all information about a page that the current session user is able to see.
+ *
+ * ## Supported Base Where Clauses
+ *
+ * - SELECT ... FROM page WHERE page_id = A
+ * - SELECT ... FROM page WHERE name = A
+ * - SELECT ... FROM page WHERE username = A
+ * - SELECT ... FROM page WHERE keywords = A
+ *
+ * Note: Additional filters on other columns can be specified but they may make the query less efficient.
+ *
+ * @var array
+ * @link https://developers.facebook.com/docs/reference/fql/page
+ */
+
 class FacebookPage extends FacebookAppModel {
 
 /**

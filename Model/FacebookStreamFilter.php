@@ -86,12 +86,12 @@ class FacebookStreamFilter extends FacebookAppModel {
  */
 	public $belongsTo = array(
 		'FacebookUser' => array(
-			'className'	   => 'Facebook.FacebookUser',
-			'foreignKey'  => 'uid'
+			'className' => 'Facebook.FacebookUser',
+			'foreignKey' => 'uid'
 		),
 		'FacebookStream' => array(
-			'className'	   => 'Facebook.FacebookStream',
-			'foreignKey'  => 'page_id',
+			'className' => 'Facebook.FacebookStream',
+			'foreignKey' => 'page_id',
 		)
 	);	
 
