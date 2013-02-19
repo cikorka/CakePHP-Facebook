@@ -70,7 +70,7 @@ class FacebookHelper extends AppHelper {
 		$this->meta();
 
 		if ($this->settings['css'] === true) {
-			$this->Html->css('Facebook.zocial/zocial', array('inline' => false));
+			$this->Html->css('Facebook.zocial/zocial', array(), array('inline' => false));
 		}
 
 		$this->Js->buffer($this->_View->element('Facebook.init', $this->settings));
