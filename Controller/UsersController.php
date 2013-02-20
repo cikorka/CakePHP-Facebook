@@ -75,6 +75,12 @@ class UsersController extends FacebookAppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->allow();
+		if (isset($this->request->params['prefix']) && !empty($this->request->params['prefix'])) {
+			$action = str_replace($this->request->params['prefix'] . '_', null, $this->request->params['action']);
+			if (is_callable(array($this, $action))) {
+				$this->setAction($action);
+			}
+		}
 	}
 
 /**
