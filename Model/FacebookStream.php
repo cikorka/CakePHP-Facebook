@@ -44,7 +44,7 @@ App::uses('FacebookAppModel', 'Facebook.Model');
  *
  * Use a filter_key to retrieve the current session user's News Feed (Try this query):
  *
- * - `SELECT post_id, actor_id, target_id, message FROM stream WHERE filter_key in 
+ * - `SELECT post_id, actor_id, target_id, message FROM stream WHERE filter_key in
  *     (SELECT filter_key FROM stream_filter WHERE uid=me() AND type='newsfeed') AND is_hidden = 0`
  *
  * Retrieve posts made by the current session user before December 30, 2009 at 12am EST:
@@ -64,20 +64,20 @@ App::uses('FacebookAppModel', 'Facebook.Model');
  * - `SELECT post_id, actor_id, target_id, message FROM stream WHERE filter_key = 'others' AND source_id = me()`
  *
  * ### Notes
- * 
- * The User, Page, Application and Group Graph API objects have equivalent feed connections containing 
- * Post objects that represent their walls. In addition the User and Page objects have a connection named posts containing 
+ *
+ * The User, Page, Application and Group Graph API objects have equivalent feed connections containing
+ * Post objects that represent their walls. In addition the User and Page objects have a connection named posts containing
  * Post objects made by the User and the Page respectively.
  *
- * If you specify a filter_key from the stream_filter FQL table or multiple users, results returned will behave like the user's 
- * homepage news feed. If only one user is specified as the source_id, you will receive the profile view of the user or page. 
- * You can filter these profile view posts by specifying filter_key 'others' (return only posts that are by someone other 
- * than the specified user) or 'owner' (return only posts made by the specified user). 
- * The profile view, unlike the homepage view, returns older data from our databases. In the case of a Page, 
+ * If you specify a filter_key from the stream_filter FQL table or multiple users, results returned will behave like the user's
+ * homepage news feed. If only one user is specified as the source_id, you will receive the profile view of the user or page.
+ * You can filter these profile view posts by specifying filter_key 'others' (return only posts that are by someone other
+ * than the specified user) or 'owner' (return only posts made by the specified user).
+ * The profile view, unlike the homepage view, returns older data from our databases. In the case of a Page,
  * the profile view also includes posts by fans.
  *
- * Each query of the stream table is limited to the previous 30 days or 50 posts, whichever is greater, 
- * however you can use time-specific fields such as created_time along with FQL operators (such as < or >) to retrieve a 
+ * Each query of the stream table is limited to the previous 30 days or 50 posts, whichever is greater,
+ * however you can use time-specific fields such as created_time along with FQL operators (such as < or >) to retrieve a
  * much greater range of posts.
  *
  * @var array

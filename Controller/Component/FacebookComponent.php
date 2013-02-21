@@ -168,7 +168,7 @@ class FacebookComponent extends Component {
 	public function post($data = array()) {
 		$FacebookPost = ClassRegistry::init('Facebook.FacebookPost');
 		$FacebookPost->create();
-		
+
 		if (!is_array($data)) {
 			$field = 'message';
 			if ((str_replace('http://', null, $data) !== $data)) {
@@ -176,7 +176,7 @@ class FacebookComponent extends Component {
 			}
 			$data = array($field => $data);
 		}
-		
+
 		$data += array('link' => null, 'message' => null, 'name' => null, 'caption' => null, 'description' => null);
 
 		$FacebookPost->create();

@@ -173,7 +173,7 @@ class FacebookHelper extends AppHelper {
  */
 	public function meta($type = 'company', $tags = array(), $inline = false) {
 		$tags += array(
-			'og:title' => $this->_View->viewVars['title_for_layout'],
+			'og:title' => $this->_View->get('title_for_layout'),
 			'og:type' => $type,
 			'og:url' => Router::url(null, true),
 			'og:image' => '',

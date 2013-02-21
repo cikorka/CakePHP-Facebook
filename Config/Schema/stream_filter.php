@@ -48,7 +48,7 @@
  * Use this query to get the latest posts of a user for a specific filter, in this case retrieving the news feed of user 3:*
  * (! the extended permission 'read_stream' is required to see results for this query):
  *
- * `SELECT post_id, actor_id, target_id, message FROM stream WHERE filter_key in 
+ * `SELECT post_id, actor_id, target_id, message FROM stream WHERE filter_key in
  *      (SELECT filter_key FROM stream_filter WHERE uid = 3 AND type = 'newsfeed')`
  *
  * @var array
@@ -56,7 +56,7 @@
  */
 
 	$schema = array(
-	
+
 	/**
 	 * A key identifying a particular filter for a user's stream
 	 */

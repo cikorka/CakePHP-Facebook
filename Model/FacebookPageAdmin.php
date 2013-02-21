@@ -113,5 +113,5 @@ class FacebookPageAdmin extends FacebookAppModel {
 			'className'	   => 'Facebook.FacebookPage',
 			'foreignKey'  => 'page_id',
 		)
-	);	
+	);
 }

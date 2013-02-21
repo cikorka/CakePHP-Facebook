@@ -253,7 +253,7 @@
 	 * This is a superset publishing permission which also includes publish_actions.
 	 * However, please note that Facebook recommends a user-initiated sharing model.
 	 * Please read the Platform Policies to ensure you understand how to properly use this permission.
-	 * Note, you do not need to request the publish_stream permission in order to use the Feed Dialog, 
+	 * Note, you do not need to request the publish_stream permission in order to use the Feed Dialog,
 	 * the Requests Dialog or the Send Dialog.
 	 *
 	 * @link https://developers.facebook.com/docs/publishing/

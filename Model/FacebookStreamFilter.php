@@ -93,6 +93,6 @@ class FacebookStreamFilter extends FacebookAppModel {
 			'className' => 'Facebook.FacebookStream',
 			'foreignKey' => 'page_id',
 		)
-	);	
+	);
 
 }

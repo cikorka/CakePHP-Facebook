@@ -20,7 +20,7 @@
  */
 
 App::uses('FacebookAppModel', 'Facebook.Model');
- 
+
 /**
  * # Page
  *

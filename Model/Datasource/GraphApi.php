@@ -60,7 +60,7 @@ class GraphApi extends DataSource {
  * @var boolean
  */
 	public $cacheSources = false;
-	
+
 	public $Http = null;
 
 /**
@@ -137,7 +137,7 @@ class GraphApi extends DataSource {
 		if ($queryData['fields'] == 'COUNT') {
 			return array(array(array('count' => 1)));
 		}
-		
+
 		$results = $this->__fetch($model, $queryData, $recursive);
 		foreach ($results as $i => $result) {
 			foreach (array_keys($model->hasMany) as $assoc) {
@@ -188,17 +188,17 @@ class GraphApi extends DataSource {
 		$results = json_decode($fbResponse->body, true);
 		return $results;
 	}
-	
+
 	private function __url(Model $Model) {
 		return implode('/', array($this->config['api'], $this->useTable($Model)));
 	}
-	
+
 	private function __fetch(Model $model, $queryData = array(), $recursive = null) {
 		$fields = null;
 		if (is_array($queryData['fields'])) {
 			$fields = implode(',', $queryData['fields']);
 		}
-		
+
 		$fbResponse = $this->Http->get($this->__url($model), $this->query + array('fields' => $fields));
 
 		$results = json_decode($fbResponse->body, true);
@@ -209,14 +209,14 @@ class GraphApi extends DataSource {
 		if (isset($results['data'])) {
 			$results = $results['data'];
 		}
-		
+
 		if (isset($results[0])) {
 			foreach ($results as $result) {
 				$resultSet[] = array($model->alias => $result);
 			}
 		} else {
 			$resultSet = array(array($model->alias => $results));
-		}		
+		}
 		return $resultSet;
 	}
 
