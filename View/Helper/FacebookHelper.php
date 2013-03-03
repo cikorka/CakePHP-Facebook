@@ -20,6 +20,7 @@
  */
 
 App::uses('AppHelper', 'View/Helper');
+App::uses('AuthComponent', 'Controller/Component');
 App::uses('CakeSession', 'Model/Datasource');
 
 
@@ -40,6 +41,7 @@ class FacebookHelper extends AppHelper {
 		'html5' => true,
 		'perms' => array(),
 		'css' => true,
+		'autoLogin' => true
 	);
 
 /**
@@ -58,12 +60,11 @@ class FacebookHelper extends AppHelper {
  * @return void
  */
 	public function beforeLayout($layoutFile) {
+		$this->settings['locale'] = 'en_US';
 		switch (Configure::read('Config.language')) {
+			case 'cs' :
 			case 'ces' :
 				$this->settings['locale'] = 'cs_CZ';
-			break;
-			case 'eng' :
-				$this->settings['locale'] = 'en_US';
 			break;
 		}
 
@@ -260,10 +261,10 @@ class FacebookHelper extends AppHelper {
 		if (isset($options['display']) && $options['display'] == 'popup') {
 			$onclick = "FB.login(function(response){if(response.authResponse){top.location.href = ':redirect_uri';} else {}}, {scope: ':scope'});";
 			$options += array('onclick' => $this->Text->insert($onclick, $params));
-			return $this->Html->link(($label === null) ? __('Facebook Login') : $label, '#', $options);
+			return $this->Html->link(($label === null) ? __d('facebook', 'Facebook Login') : $label, '#', $options);
 		}
 		$url = Router::url(array('plugin' => 'facebook', 'controller' => 'users', 'action' => 'login'));
-		return $this->Html->link(($label === null) ? __('Facebook Login') : $label, $url, $options);
+		return $this->Html->link(($label === null) ? __d('facebook', 'Facebook Login') : $label, $url, $options);
 	}
 
 /**
@@ -304,13 +305,13 @@ class FacebookHelper extends AppHelper {
 		if (AuthComponent::user()) {
 			$url = Router::url(array('plugin' => 'facebook', 'controller' => 'users', 'action' => 'logout'), true);
 			$options += array('onclick' => "FB.logout(function(response) {top.location.href = '$url';});");
-			return $this->Html->link(($label === null) ? __('Logout') : $label, $url, $options);
+			return $this->Html->link(($label === null) ? __d('facebook', 'Logout') : $label, $url, $options);
 		}
 	}
 
 	public function disconnect($label = null, $options = array()) {
 		$url = array('plugin' => 'facebook', 'controller' => 'users', 'action' => 'disconnect');
-		return $this->Html->link(($label === null) ? __('Disconnect') : $label, $url, $options);
+		return $this->Html->link(($label === null) ? __d('facebook', 'Disconnect') : $label, $url, $options);
 	}
 
 /**
@@ -661,7 +662,7 @@ class FacebookHelper extends AppHelper {
 		return $this->__tag('profile-pic', $settings);
 	}
 
-	protected function _permissions($map = null) {
+/*	protected function _permissions($map = null) {
 		if ($map !== null) {
 			return $this->_perms[$map];
 		}
@@ -671,7 +672,7 @@ class FacebookHelper extends AppHelper {
 		}
 		return $perms;
 	}
-
+*/
 /**
  * Generate Facebook XFBML tag
  *
