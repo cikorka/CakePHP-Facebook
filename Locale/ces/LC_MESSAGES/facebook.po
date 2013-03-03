@@ -1,0 +1,26 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2013-03-03 18:22+0100\n"
+"PO-Revision-Date: 2013-03-03 18:23+0100\n"
+"Last-Translator: Petr Jeřábek <cikorka@cikorka.cz>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: Plugin/Facebook/View/Helper/FacebookHelper.php:263;266
+msgid "Facebook Login"
+msgstr "Přihlásit pomocí Facebooku"
+
+#: Plugin/Facebook/View/Helper/FacebookHelper.php:307
+msgid "Logout"
+msgstr "Odhlásit"
+
+#: Plugin/Facebook/View/Helper/FacebookHelper.php:313
+msgid "Disconnect"
+msgstr "Odpojit se z aplikace"
