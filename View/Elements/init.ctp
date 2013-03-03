@@ -9,13 +9,40 @@ window.fbAsyncInit = function() {
 	});
 
 	// Additional initialization code such as adding Event Listeners goes here
+<?php 
+
+/**
+ * Integration with Google Analytics social tracking
+ *
+ * @link http://developers.google.com/analytics/devguides/collection/gajs/gaTrackingSocial
+ */
+
+if (isset($web) && $web['Site']['google_analytics'] === true) : ?>
+
+	FB.Event.subscribe('edge.create', function(targetUrl) {
+		_gaq.push(['_trackSocial', 'facebook', 'like', targetUrl]);
+	});
+
+	FB.Event.subscribe('edge.remove', function(targetUrl) {
+		_gaq.push(['_trackSocial', 'facebook', 'unlike', targetUrl]);
+	});
+
+	FB.Event.subscribe('message.send', function(targetUrl) {
+		_gaq.push(['_trackSocial', 'facebook', 'send', targetUrl]);
+	});
+	
+<?php endif; ?>
 
 	// Checks whether the user is logged in
 	FB.getLoginStatus(function(response) {
 		if (response.status === 'connected') {
 			// connected
 			// alert('connected');
-			<?php if (!AuthComponent::user()) echo "top.location.href = '" . Router::url(array('plugin' => 'facebook', 'controller' => 'users', 'action' => 'login')) . "';"; ?>
+			<?php
+				if (!AuthComponent::user() && $autoLogin === true) {
+					echo "top.location.href = '" . Router::url(array('plugin' => 'facebook', 'controller' => 'users', 'action' => 'login')) . "';";					
+				}
+			?>
 		} else if (response.status === 'not_authorized') {
 			// not_authorized
 			// alert('not_authorized');
@@ -25,8 +52,6 @@ window.fbAsyncInit = function() {
 		}
 	});
 };
-
-debug = true;
 
 // Load the SDK's source Asynchronously
 // Note that the debug version is being actively developed and might
