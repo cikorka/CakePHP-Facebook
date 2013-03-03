@@ -19,6 +19,7 @@
  * @file		FQL.php
  */
 
+App::uses('DboSource', 'Model/Datasource');
 App::uses('HttpSocket', 'Network/Http');
 App::uses('CakeSession', 'Model/Datasource');
 App::uses('Folder', 'Utility');
