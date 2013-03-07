@@ -178,7 +178,7 @@ class FacebookHelper extends AppHelper {
 			'og:type' => $type,
 			'og:url' => Router::url(null, true),
 			'og:image' => '',
-			'og:site_name' => (isset($this->_View->viewVars['site']['Site']['name'])) ? $this->_View->viewVars['site']['Site']['name'] : null,
+			'og:site_name' => (isset($this->_View->viewVars['web']['Site']['name'])) ? $this->_View->viewVars['web']['Site']['name'] : null,
 			'fb:app_id' => $this->settings['app_id'],
 		);
 		$meta = null;
