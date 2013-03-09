@@ -1,4 +1,6 @@
 # CakePHP Ultimate Facebook Plugin
+Development version
+v 0.1.0
 
 Contains FacebookComponent, FacebookHelper, FacebookAuthenticate class, Facebook FQL Datasource and many model classes for CakePHP 2.x
 
