@@ -134,6 +134,7 @@ class FQL extends DboSource {
  * Returns a Model description (metadata) or null if none found.
  *
  * @param Model|string $model
+ * @throws CakeException
  * @return array Array of Metadata for the $model
  */
 	public function describe($model) {
@@ -150,7 +151,7 @@ class FQL extends DboSource {
 		$pluginName = basename(dirname(dirname(dirname(__FILE__))));
 		$file = App::pluginPath($pluginName) . 'Config' . DS . 'Schema' . DS . $table . '.php';
 		if (file_exists($file)) {
-			include_once($file);
+			include_once ($file);
 			if (isset($schema)) {
 				return $this->_descriptions[$table] = $schema;
 			}
@@ -522,7 +523,7 @@ class FQL extends DboSource {
 					'joins' => array(array(
 						'table' => $joinTbl,
 						'alias' => $joinAssoc,
-						'fields'=> $joinFields,
+						'fields' => $joinFields,
 						'conditions' => $this->getConstraint('hasAndBelongsToMany', $model, $linkModel, $joinAlias, $assocData, $association)
 					))
 				);
@@ -566,9 +567,7 @@ class FQL extends DboSource {
 			case ($type === 'hasMany'):
 				return array("{$alias}.{$assoc['foreignKey']}" => array('{$__cakeID__$}'));
 			case ($type === 'hasAndBelongsToMany'):
-				return array(
-					array("{$alias}.{$assoc['foreignKey']}" => '{$__cakeID__$}'),
-				);
+				return array(array("{$alias}.{$assoc['foreignKey']}" => '{$__cakeID__$}'));
 		}
 		return array();
 	}
@@ -609,6 +608,7 @@ class FQL extends DboSource {
  *
  * @param string $type type of query being run.  e.g select, create, update, delete, schema, alter.
  * @param array $data Array of data to insert into the query.
+ * @throws NotImplementedException
  * @return string Rendered FQL expression to be run.
  */
 	public function renderStatement($type, $data) {

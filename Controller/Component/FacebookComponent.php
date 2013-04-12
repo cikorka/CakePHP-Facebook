@@ -164,7 +164,7 @@ class FacebookComponent extends Component {
 		}
 	}
 
-/*
+	/*
 	public function post($data = array()) {
 		$FacebookPost = ClassRegistry::init('Facebook.FacebookPost');
 		$FacebookPost->create();
@@ -182,6 +182,6 @@ class FacebookComponent extends Component {
 		$FacebookPost->create();
 		return $FacebookPost->save(array('FacebookPost' => $data));
 	}
-*/
+	*/
 
 }

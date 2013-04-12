@@ -82,7 +82,7 @@ class FacebookHelper extends AppHelper {
  * Open Graph tags
  *
  * If you use Open Graph tags, the following six are required:
-
+ *
  * - `og:title` - The title of the entity.
  * - `og:type` - The type of entity. You must select a type from the list of Open Graph types.
  * - `og:image - The URL to an image that represents the entity.
@@ -297,7 +297,6 @@ class FacebookHelper extends AppHelper {
 		return $this->__tag('login-button', $settings);
 	}
 
-
 	public function registration($settings = array()) {
 	}
 
@@ -467,7 +466,7 @@ class FacebookHelper extends AppHelper {
  * (all administrators of the app will be able to moderate comments).
  * Doing this enables a moderator interface on Facebook where comments from all plugins administered
  * by your app id can be easily moderated together. This tag should be specified in the <head>.
-
+ *
  * `<meta property="fb:app_id" content="{YOUR_APPLICATION_ID}"/>`
  * You can moderate comments from just this plugin inline.
  * If you have specified your app id as the admin, you can moderate all your plugins at http://developers.facebook.com/tools/comments.
@@ -662,7 +661,8 @@ class FacebookHelper extends AppHelper {
 		return $this->__tag('profile-pic', $settings);
 	}
 
-/*	protected function _permissions($map = null) {
+	/*
+	protected function _permissions($map = null) {
 		if ($map !== null) {
 			return $this->_perms[$map];
 		}
@@ -672,7 +672,8 @@ class FacebookHelper extends AppHelper {
 		}
 		return $perms;
 	}
-*/
+	*/
+
 /**
  * Generate Facebook XFBML tag
  *

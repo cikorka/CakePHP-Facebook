@@ -105,6 +105,7 @@ class GraphApi extends DataSource {
  * @param Model $model The Model to be created.
  * @param array $fields An Array of fields to be saved.
  * @param array $values An Array of values to save.
+ * @throws CakeException
  * @return boolean success
  */
 	public function create(Model $model, $fields = null, $values = null) {
@@ -128,12 +129,12 @@ class GraphApi extends DataSource {
  * @return mixed
  */
 	public function read(Model $model, $queryData = array(), $recursive = null) {
-		/**
-		 * Here we do the actual count as instructed by our calculate()
-		 * method above. We could either check the remote source or some
-		 * other way to get the record count. Here we'll simply return 1 so
-		 * ``update()`` and ``delete()`` will assume the record exists.
-		 */
+	/**
+	 * Here we do the actual count as instructed by our calculate()
+	 * method above. We could either check the remote source or some
+	 * other way to get the record count. Here we'll simply return 1 so
+	 * ``update()`` and ``delete()`` will assume the record exists.
+	 */
 		if ($queryData['fields'] == 'COUNT') {
 			return array(array(array('count' => 1)));
 		}
@@ -189,10 +190,20 @@ class GraphApi extends DataSource {
 		return $results;
 	}
 
+/**
+ *
+ *
+ * @param Model $model The model class having record(s) deleted
+ */
 	private function __url(Model $Model) {
 		return implode('/', array($this->config['api'], $this->useTable($Model)));
 	}
 
+/**
+ *
+ * @throws Exception
+ * @param Model $model The model class having record(s) deleted
+ */
 	private function __fetch(Model $model, $queryData = array(), $recursive = null) {
 		$fields = null;
 		if (is_array($queryData['fields'])) {
