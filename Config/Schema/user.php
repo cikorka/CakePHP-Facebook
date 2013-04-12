@@ -214,12 +214,7 @@
 	 * Whether the user is blocked by the current session user
 	 */
 		'is_blocked' => array('type' => 'boolean'),
-	/**
-	 * Whether the user is a minor
-	 *
-	 * @todo ??perms
-	 */
-		'is_minor' => array('type' => 'boolean'),
+
 	/**
 	 * The user's languages
 	 */
@@ -455,7 +450,7 @@
 	/**
 	 * The user ID
 	 */
-		'uid' =>  array('type' => 'integer', 'index' => true),
+		'uid' => array('type' => 'integer', 'index' => true),
 	/**
 	 * The user's username
 	 */
