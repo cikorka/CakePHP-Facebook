@@ -44,19 +44,6 @@ class FacebookAppModel extends AppModel {
 	public $cacheQueries = true;
 
 /**
- * Called before each find operation. Return false if you want to halt the find
- * call, otherwise return the (modified) query data.
- *
- * @param array $queryData Data used to execute this query, i.e. conditions, order, etc.
- * @return mixed true if the operation should continue, false if it should abort; or, modified
- *               $queryData to continue with new $queryData
- * @link http://book.cakephp.org/2.0/en/models/callback-methods.html#beforefind
- */
-	public function beforeFind($queryData) {
-		return true;
-	}
-
-/**
  * Called after each find operation. Can be used to modify any results returned by find().
  * Return value should be the (modified) results.
  *
@@ -83,17 +70,6 @@ class FacebookAppModel extends AppModel {
 	}
 
 /**
- * Called after each successful save operation.
- *
- * @param boolean $created True if this save created a new record
- * @return void
- * @link http://book.cakephp.org/2.0/en/models/callback-methods.html#aftersave
- */
-	public function afterSave($created) {
-		parent::afterSave($created);
-	}
-
-/**
  * Called before every deletion operation.
  *
  * @param boolean $cascade If true records that depend on this record will also be deleted
@@ -103,44 +79,6 @@ class FacebookAppModel extends AppModel {
 	public function beforeDelete($cascade = true) {
 		$this->useDbConfig = 'facebook2';
 		return true;
-	}
-
-/**
- * Called after every deletion operation.
- *
- * @return void
- * @link http://book.cakephp.org/2.0/en/models/callback-methods.html#afterdelete
- */
-	public function afterDelete() {
-	}
-
-/**
- * Called during validation operations, before validation. Please note that custom
- * validation rules can be defined in $validate.
- *
- * @param array $options Options passed from model::save(), see $options of model::save().
- * @return boolean True if validate operation should continue, false to abort
- * @link http://book.cakephp.org/2.0/en/models/callback-methods.html#beforevalidate
- */
-	public function beforeValidate($options = array()) {
-		return true;
-	}
-
-/**
- * Called after data has been checked for errors
- *
- * @return void
- */
-	public function afterValidate() {
-	}
-
-/**
- * Called when a DataSource-level error occurs.
- *
- * @return void
- * @link http://book.cakephp.org/2.0/en/models/callback-methods.html#onerror
- */
-	public function onError() {
 	}
 
 	public function permissions() {
