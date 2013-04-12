@@ -15,7 +15,7 @@ Contains FacebookComponent, FacebookHelper, FacebookAuthenticate class, Facebook
 		//app/Config/bootstrap.php
 		CakePlugin::load('Facebook');
 
-* Add FacebookComponent and AuthComponent (if ont loaded) in `app/Controller/AppController.php` file:
+* Add FacebookComponent and AuthComponent (if not loaded) in `app/Controller/AppController.php` file:
 
 		//app/Controller/AppController.php
 		public $components = array('Facebook.Facebook', 'Auth');
