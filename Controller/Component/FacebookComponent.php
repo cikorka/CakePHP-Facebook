@@ -141,6 +141,9 @@ class FacebookComponent extends Component {
 
 	public function login($permissions = array()) {
 		if (!isset($this->_Controller->request->query['state'])) {
+                        $key = sprintf('fb_%s_state', $this->settings['app_id']);
+                        $state = md5(uniqid(rand(), TRUE));
+                        CakeSession::write($key, $state);
 			$params = array(
 				'client_id' => $this->settings['app_id'],
 				'redirect_uri' => Router::url(
@@ -151,7 +154,7 @@ class FacebookComponent extends Component {
 						'admin' => false
 						), true
 					),
-				'state' => CakeSession::read(sprintf('fb_%s_state', $this->settings['app_id'])),
+				'state' => $state,
 				'scope' => implode(',', $permissions + array_keys(ClassRegistry::init('Facebook.FacebookPermission')->schema())),
 			);
 
